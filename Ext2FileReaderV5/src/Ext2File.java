@@ -88,6 +88,7 @@ public class Ext2File {
 	private void loadDirectories(int BLOCKGROUPNUMBER, int DIRECTORYPOINTER) {
 		
 		volumeDirectory.clear();
+		volumeDirectory.trimToSize();
 		
 		boolean moreDirectories = true;
 		int currentDirectoryLength = 0;
@@ -231,8 +232,13 @@ public class Ext2File {
 		}
 	}
 	
+	/**
+	 * Allows for input of file/directory name. Allows for
+	 * traversal of file system via the console.
+	 */
 	private void run() {
 		scanner = new Scanner(System.in);
+		System.out.println(""); //Just some padding to make things nice
 		String input = scanner.next();
 		loadByName(input);
 		run();

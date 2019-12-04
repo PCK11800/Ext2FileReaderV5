@@ -48,7 +48,7 @@ public class Datablock {
 			datablock[i] = buffer.get(i);
 		}
 		
-		DATABLOCKCONTENT_STR = new String(datablock);
+		DATABLOCKCONTENT_STR = new String(datablock).trim();
 	}
 	
 	/**
@@ -69,9 +69,9 @@ public class Datablock {
 			offset = offset + 4;
 		}
 		
-		int[] DATABLOCK_CONTENT_POINTERS = new int[list.size()];
+		DATABLOCKCONTENT_POINTERS = new int[list.size()];
 		for(int i = 0; i < list.size(); i++) {
-			DATABLOCK_CONTENT_POINTERS[i] = list.get(i);
+			DATABLOCKCONTENT_POINTERS[i] = list.get(i);
 		}
 	}
 	
