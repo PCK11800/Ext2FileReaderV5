@@ -88,6 +88,31 @@ public class Ext2File {
 	}
 	
 	/**
+	 * Turn a series of bytes into hexadecimal and 
+	 * prints it out.
+	 * @param bytes
+	 */
+	public void dumpHexByte(byte[] bytes) {
+		StringBuilder sb = new StringBuilder();
+		int s = 0;
+		int l = 0;
+		for(int i = 0; i < bytes.length; i++) {
+			if(s == 1) {
+				sb.append(" ");
+				s = 0;
+			}
+			if(l == 4) {
+				sb.append("\n");
+				l = 0;
+			}
+			sb.append(String.format("%02x", bytes[i]));
+			l++;
+			s++;
+		}
+		System.out.print(sb.toString());
+	}
+	
+	/**
 	 * Set the file specific variables and immediately loads the
 	 * base directory from Inode 2.
 	 * 
