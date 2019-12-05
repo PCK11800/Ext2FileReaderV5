@@ -114,31 +114,38 @@ public class Ext2File {
 	 * hopefully :(
 	 */
 	private void printDirectories() {
-		int fieldLength = 20;
-		StringBuilder sb = new StringBuilder(fieldLength);
+		StringBuilder sb = new StringBuilder();
 		
 		for(int i = 0; i < volumeDirectory.size(); i++) {
 
 			String name = volumeDirectory.get(i).getNAME();
 			String fileType = volumeDirectory.get(i).getFILETYPE_STR();
+			String fileSize = Integer.toString(volumeDirectory.get(i).getINODE().getFileSize());
 			String creationDate = volumeDirectory.get(i).getINODE().getCREATIONTIME_STR();
+
+			int fileTypePaddingLength = 15 - fileType.length();
+			int fileSizePaddingLength = 10 - fileSize.length();
+			int creationDatePaddingLength = 28 - creationDate.length();
+			int namePaddingLength =  20 - volumeDirectory.get(i).getNAMELENGTH();
 			
-			int namePaddingLength =  fieldLength - volumeDirectory.get(i).getNAMELENGTH();
-			int fileTypePaddingLength = fieldLength - fileType.length();
-			int creationDatePaddingLength = fieldLength - creationDate.length();
-			
-			sb.append(name);
-			for(int n = 0; n < namePaddingLength; n++) {
-				sb.append(" ");
-			}
 			
 			sb.append(fileType);
 			for(int n = 0; n < fileTypePaddingLength; n++) {
 				sb.append(" ");
 			}
 			
+			sb.append(fileSize);
+			for(int n = 0; n < fileSizePaddingLength; n++) {
+				sb.append(" ");
+			}
+			
 			sb.append(creationDate);
 			for(int n = 0; n < creationDatePaddingLength; n++) {
+				sb.append(" ");
+			}
+			
+			sb.append(name);
+			for(int n = 0; n < namePaddingLength; n++) {
 				sb.append(" ");
 			}
 			
@@ -238,7 +245,6 @@ public class Ext2File {
 	 */
 	private void run() {
 		scanner = new Scanner(System.in);
-		System.out.println(""); //Just some padding to make things nice
 		String input = scanner.next();
 		loadByName(input);
 		run();

@@ -87,6 +87,7 @@ public class Superblock {
 	
 	public void printData() {
 		System.out.println("=================================================");
+		System.out.println("Volume Name: " + VOLUMELABEL);
 		System.out.println("Magic Number: " + convertMagicNumber(MAGICNUMBER));
 		System.out.println("Inode Count: " + INODETOTAL);
 		System.out.println("Block Count: " + BLOCKTOTAL);
@@ -94,7 +95,6 @@ public class Superblock {
 		System.out.println("Blocks Per Group: " + NUMBEROFBLOCKSPERGROUP);
 		System.out.println("Inodes Per Group: " + NUMBEROFINODESPERGROUP);
 		System.out.println("Inode Size: " + INODESIZE);
-		System.out.println("Volume Name: " + VOLUMELABEL);
 		System.out.println("Number of Block Groups: " + NUMBEROFBLOCKGROUPS);
 		System.out.println("=================================================");
 	}

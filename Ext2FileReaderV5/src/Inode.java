@@ -107,4 +107,8 @@ public class Inode {
 	public String getCREATIONTIME_STR() {
 		return getDate(CREATIONTIME);
 	}
+	
+	public int getFileSize() {
+		return FILESIZELOWER;
+	}
 }
