@@ -21,6 +21,7 @@ public class Ext2File {
 	ArrayList<GroupDescriptor> descriptorList = new ArrayList<>();
 	
 	//File Specific Variables
+	private long currentPos = 0;
 	private int NUMBEROFBLOCKGROUPS;
 	private int NUMBEROFBLOCKSPERGROUP;
 	private int LENGTHOFBLOCKGROUPS;
@@ -55,6 +56,38 @@ public class Ext2File {
 	}
 	
 	/**
+	 * Returns series of bytes from currentPos
+	 * @param length the amount of bytes the method will read
+	 * @return		 the bytes of length 'length' starting from currentPos
+	 */
+	public byte[] read(long length) {
+		byte[] data = new byte[(int) length];
+		try {
+			raf.seek(currentPos);
+			raf.read(data);
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
+		return data;
+	}
+	
+	/**
+	 * Sets currentPos to a specific number
+	 * @param currentPos Move byte to currentPos position in file
+	 */
+	public void seek(long currentPos) {
+		this.currentPos = currentPos;
+	}
+	
+	/**
+	 * Gets the current offset in file
+	 * @return Current position in file
+	 */
+	public long position() {
+		return currentPos;
+	}
+	
+	/**
 	 * Set the file specific variables and immediately loads the
 	 * base directory from Inode 2.
 	 * 
@@ -73,7 +106,7 @@ public class Ext2File {
 		}
 		
 		Inode inode2 = new Inode(this, 0, 2);
-		loadDirectories(0, inode2.getBlockPointer(0));
+		loadDirectories(0, inode2.getBlockPointers());
 		
 		run();
 	}
@@ -85,22 +118,24 @@ public class Ext2File {
 	 * @param DIRECTORYPOINTER The directory pointer for this block group
 	 */
 	
-	private void loadDirectories(int BLOCKGROUPNUMBER, int DIRECTORYPOINTER) {
-		
+	private void loadDirectories(int BLOCKGROUPNUMBER, int[] DIRECTORYPOINTERS) {
 		volumeDirectory.clear();
 		volumeDirectory.trimToSize();
 		
-		boolean moreDirectories = true;
-		int currentDirectoryLength = 0;
-		
-		while(moreDirectories) {
-			volumeDirectory.add(new Directory(this, DIRECTORYPOINTER, currentDirectoryLength));
-			currentDirectoryLength = currentDirectoryLength + volumeDirectory.get(volumeDirectory.size() - 1).getLENGTH();
-			if(currentDirectoryLength >= 1024) {
-				moreDirectories = false;
+		for(int i = 0; i < DIRECTORYPOINTERS.length; i++) {
+			if(DIRECTORYPOINTERS[i] != 0) {
+				boolean moreDirectories = true;
+				int currentDirectoryLength = 0;
+				
+				while(moreDirectories) {
+					volumeDirectory.add(new Directory(this, DIRECTORYPOINTERS[i], currentDirectoryLength));
+					currentDirectoryLength = currentDirectoryLength + volumeDirectory.get(volumeDirectory.size() - 1).getLENGTH();
+					if(currentDirectoryLength >= 1024) {
+						moreDirectories = false;
+					}
+				}
 			}
 		}
-		
 		printDirectories();
 	}
 	
@@ -232,7 +267,7 @@ public class Ext2File {
 			else if(thisDirectory.getFILETYPE() == 2) {
 				for(int i = 0; i < DATABLOCKPOINTERS.length; i++) {
 					if(DATABLOCKPOINTERS[i] != 0) {
-						loadDirectories(thisDirectory.getBLOCKGROUPNUMBER(), DATABLOCKPOINTERS[i]);
+						loadDirectories(thisDirectory.getBLOCKGROUPNUMBER(), DATABLOCKPOINTERS);
 					}
 				}
 			}
