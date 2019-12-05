@@ -81,6 +81,21 @@ public class Inode {
 		return date.toGMTString();
 	}
 	
+	/**
+	 * Combine file size lower and upper into a single
+	 * file length 
+	 * 
+	 * @param FILESIZELOWER File size in lower 32 bits
+	 * @param FILESIZEUPPER File size in upper 32 bits
+	 * @return
+	 */
+	private String setFileLength(int FILESIZELOWER, int FILESIZEUPPER) {
+		long lower32 = FILESIZELOWER;
+		long upper32 = FILESIZEUPPER;
+		long size64 = (upper32 << 32) | (lower32);
+		return Long.toString(size64);
+	}
+	
 	public void printData() {
 		System.out.println("=================================================");
 		System.out.println("File Mode: " + FILEMODE);
@@ -108,7 +123,7 @@ public class Inode {
 		return getDate(CREATIONTIME);
 	}
 	
-	public int getFileSize() {
-		return FILESIZELOWER;
+	public String getFileSize_STR() {
+		return setFileLength(FILESIZELOWER, FILESIZEUPPER);
 	}
 }

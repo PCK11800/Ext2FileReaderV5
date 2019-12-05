@@ -120,14 +120,13 @@ public class Ext2File {
 
 			String name = volumeDirectory.get(i).getNAME();
 			String fileType = volumeDirectory.get(i).getFILETYPE_STR();
-			String fileSize = Integer.toString(volumeDirectory.get(i).getINODE().getFileSize());
+			String fileSize = volumeDirectory.get(i).getINODE().getFileSize_STR();
 			String creationDate = volumeDirectory.get(i).getINODE().getCREATIONTIME_STR();
-
+			
 			int fileTypePaddingLength = 15 - fileType.length();
-			int fileSizePaddingLength = 10 - fileSize.length();
+			int fileSizePaddingLength = 15 - fileSize.length();
 			int creationDatePaddingLength = 28 - creationDate.length();
 			int namePaddingLength =  20 - volumeDirectory.get(i).getNAMELENGTH();
-			
 			
 			sb.append(fileType);
 			for(int n = 0; n < fileTypePaddingLength; n++) {
@@ -152,7 +151,7 @@ public class Ext2File {
 			sb.append("\n");
 		}
 		
-		System.out.println(sb.toString());
+		System.out.print(sb.toString());
 	}
 	
 	/**
@@ -231,7 +230,11 @@ public class Ext2File {
 				loadFile(DATABLOCKPOINTERS);
 			}
 			else if(thisDirectory.getFILETYPE() == 2) {
-				loadDirectories(thisDirectory.getBLOCKGROUPNUMBER(), DATABLOCKPOINTERS[0]);
+				for(int i = 0; i < DATABLOCKPOINTERS.length; i++) {
+					if(DATABLOCKPOINTERS[i] != 0) {
+						loadDirectories(thisDirectory.getBLOCKGROUPNUMBER(), DATABLOCKPOINTERS[i]);
+					}
+				}
 			}
 		}
 		else {
